@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+  <title>Transfer Money — Bankify</title>
+  <style>
+    .page-wrap {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .transfer-content {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 120px 24px 60px;
+    }
+    .transfer-card {
+      width: 100%;
+      max-width: 520px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-xl);
+      padding: 44px 40px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4), var(--shadow-glow);
+      animation: fadeInUp 0.5s ease-out both;
+    }
+    .transfer-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .transfer-icon {
+      width: 56px; height: 56px;
+      background: var(--accent-gradient);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      box-shadow: 0 0 30px rgba(123,47,247,0.25);
+    }
+    .transfer-header h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .transfer-header p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+    }
+
+    .amount-input-wrap {
+      position: relative;
+    }
+    .amount-prefix {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .amount-input-wrap .input-field {
+      padding-left: 40px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .transfer-form .btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 1rem;
+      margin-top: 12px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .back-link:hover { color: var(--text-primary); }
+
+    .no-accounts-msg {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .no-accounts-msg p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .transfer-card { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-scene">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+  </div>
+
+  <div class="page-wrap">
+    <%- include('partials/navbar') %>
+
+    <div class="transfer-content">
+      <div class="transfer-card">
+        <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+        <div class="transfer-header">
+          <div class="transfer-icon">💸</div>
+          <h1>Transfer Money</h1>
+          <p>Send funds securely to any Bankify account</p>
+        </div>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+          <div class="alert alert-error"><%= error %></div>
+        <% } %>
+        <% if (typeof success !== 'undefined' && success) { %>
+          <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <% if (accounts && accounts.length > 0) { %>
+          <form class="transfer-form" action="/transfer" method="POST">
+
+            <div class="input-group">
+              <label for="fromAccount">From Account</label>
+              <select id="fromAccount" name="fromAccount" class="select-field" required>
+                <option value="" disabled selected>Select your account</option>
+                <% accounts.forEach(function(acc) { %>
+                  <% if (acc.status === 'ACTIVE') { %>
+                    <option value="<%= acc._id %>">
+                      #<%= String(acc._id).slice(-8).toUpperCase() %> — Balance: ₹<%= Number(acc.balance).toLocaleString('en-IN', { minimumFractionDigits: 2 }) %>
+                    </option>
+                  <% } %>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="divider">TO</div>
+
+            <div class="input-group">
+              <label for="toAccount">Recipient Account ID</label>
+              <input type="text" id="toAccount" name="toAccount" class="input-field" placeholder="Paste the recipient's account ID" required>
+            </div>
+
+            <div class="input-group">
+              <label for="amount">Amount (₹)</label>
+              <div class="amount-input-wrap">
+                <span class="amount-prefix">₹</span>
+                <input type="number" id="amount" name="amount" class="input-field" placeholder="0.00" required min="1" step="any">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send Money</button>
+          </form>
+        <% } else { %>
+          <div class="no-accounts-msg">
+            <p>You need an active account to make transfers.</p>
+            <form action="/accounts/create" method="POST">
+              <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

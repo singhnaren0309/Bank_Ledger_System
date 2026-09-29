@@ -1,0 +1,107 @@
+<style>
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 0 24px;
+    background: rgba(10,10,26,0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .navbar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+  .navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .navbar-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent-gradient);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 0 20px rgba(123,47,247,0.3);
+  }
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+  }
+  .navbar-links a {
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .navbar-links a:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.06);
+  }
+  .navbar-links .nav-cta {
+    background: var(--accent-gradient);
+    color: #fff !important;
+    font-weight: 600;
+    padding: 9px 22px;
+    box-shadow: 0 2px 12px rgba(123,47,247,0.25);
+  }
+  .navbar-links .nav-cta:hover {
+    box-shadow: 0 4px 20px rgba(123,47,247,0.45);
+    transform: translateY(-1px);
+  }
+  .navbar-links .nav-logout {
+    color: #ff8a80;
+  }
+  .navbar-links .nav-logout:hover {
+    background: rgba(255,82,82,0.1);
+    color: #ff5252;
+  }
+
+  @media (max-width: 640px) {
+    .navbar-links { gap: 2px; }
+    .navbar-links a { padding: 8px 12px; font-size: 0.82rem; }
+    .navbar-logo { font-size: 1.15rem; }
+  }
+</style>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="navbar-logo">
+      <span class="navbar-logo-icon">B</span>
+      <span class="gradient-text">Bankify</span>
+    </a>
+    <ul class="navbar-links">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/transfer">Transfer</a></li>
+        <li><a href="/logout" class="nav-logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register" class="nav-cta">Get Started</a></li>
+      <% } %>
+    </ul>
+  </div>
+</nav>

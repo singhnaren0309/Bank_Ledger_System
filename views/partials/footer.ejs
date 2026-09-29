@@ -1,0 +1,36 @@
+<style>
+  .footer {
+    margin-top: auto;
+    padding: 32px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 2px;
+    background: var(--accent-gradient);
+    border-radius: 2px;
+  }
+  .footer-text {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .footer-text span {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+  }
+</style>
+
+<footer class="footer">
+  <p class="footer-text">&copy; 2026 <span>Bankify</span>. Secure digital banking.</p>
+</footer>
